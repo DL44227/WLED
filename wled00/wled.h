@@ -402,6 +402,10 @@ WLED_GLOBAL byte macroButton[WLED_MAX_BUTTONS]        _INIT({0});
 WLED_GLOBAL byte macroLongPress[WLED_MAX_BUTTONS]     _INIT({0});
 WLED_GLOBAL byte macroDoublePress[WLED_MAX_BUTTONS]   _INIT({0});
 
+WLED_GLOBAL byte currentButtonPreset _INIT(1); // current preset
+WLED_GLOBAL byte minButtonPreset _INIT(1); // first preset to step through
+WLED_GLOBAL byte maxButtonPreset _INIT(10); // last preset to step through
+
 // Security CONFIG
 WLED_GLOBAL bool otaLock     _INIT(false);  // prevents OTA firmware updates without password. ALWAYS enable if system exposed to any public networks
 WLED_GLOBAL bool wifiLock    _INIT(false);  // prevents access to WiFi settings when OTA lock is enabled

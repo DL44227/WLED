@@ -18,6 +18,21 @@ void shortPressAction(uint8_t b)
     switch (b) {
       case 0: toggleOnOff(); colorUpdated(CALL_MODE_BUTTON); break;
       case 1: ++effectCurrent %= strip.getModeCount(); effectChanged = true; colorUpdated(CALL_MODE_BUTTON); break;
+      case 2: // This button is for changing to the previous preset
+        currentButtonPreset--;
+        if (currentButtonPreset < minButtonPreset)
+        {
+          currentButtonPreset = maxButtonPreset;
+        }
+        applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+        break;
+      case 3: // This button is for changing to the next preset
+        currentButtonPreset++;
+        if (currentButtonPreset > maxButtonPreset) {
+          currentButtonPreset = minButtonPreset;
+        }
+        applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+        break;
     }
   } else {
     applyPreset(macroButton[b], CALL_MODE_BUTTON_PRESET);
@@ -37,6 +52,15 @@ void longPressAction(uint8_t b)
     switch (b) {
       case 0: _setRandomColor(false,true); break;
       case 1: bri += 8; colorUpdated(CALL_MODE_BUTTON); buttonPressedTime[b] = millis(); break; // repeatable action
+      case 2: // This button long pressed is for changing to the first preset
+        currentButtonPreset = minButtonPreset;
+        applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+        break;
+      case 3: // This button long pressed is for changing to the last preset
+        currentButtonPreset = maxButtonPreset;
+        applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+        break;
+
     }
   } else {
     applyPreset(macroLongPress[b], CALL_MODE_BUTTON_PRESET);
@@ -108,13 +132,36 @@ void handleSwitch(uint8_t b)
   if (millis() - buttonPressedTime[b] > WLED_DEBOUNCE_THRESHOLD) { //fire edge event only after 50ms without change (debounce)
     if (!buttonPressedBefore[b]) { // on -> off
       if (macroButton[b]) applyPreset(macroButton[b], CALL_MODE_BUTTON_PRESET);
-      else { //turn on
-        if (!bri) {toggleOnOff(); colorUpdated(CALL_MODE_BUTTON);}
+      else {
+        switch (b) {
+          case 0: //turn on
+          case 1: //turn on
+            if (!bri) {toggleOnOff(); colorUpdated(CALL_MODE_BUTTON);}
+            break;
+          case 2: //change to first preset
+            currentButtonPreset = minButtonPreset;
+            applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+            break;
+          case 3: //change to next preset
+            currentButtonPreset++;
+            if (currentButtonPreset > maxButtonPreset) {
+              currentButtonPreset = minButtonPreset;
+            }
+            applyPreset (currentButtonPreset, CALL_MODE_BUTTON_PRESET);
+            break;
+        }
       } 
     } else {  // off -> on
       if (macroLongPress[b]) applyPreset(macroLongPress[b], CALL_MODE_BUTTON_PRESET);
-      else { //turn off
-        if (bri) {toggleOnOff(); colorUpdated(CALL_MODE_BUTTON);}
+      else {
+        switch (b) {
+          case 0: //turn off
+          case 1: //turn off
+          case 2: //turn off
+          case 3: //turn off
+            if (bri) {toggleOnOff(); colorUpdated(CALL_MODE_BUTTON);}
+            break;
+        }
       } 
     }
 
