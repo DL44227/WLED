@@ -405,6 +405,7 @@ WLED_GLOBAL byte macroDoublePress[WLED_MAX_BUTTONS]   _INIT({0});
 WLED_GLOBAL byte currentButtonPreset _INIT(1); // current preset
 WLED_GLOBAL byte minButtonPreset _INIT(1); // first preset to step through
 WLED_GLOBAL byte maxButtonPreset _INIT(10); // last preset to step through
+WLED_GLOBAL byte switchButtonInvertedLogic _INIT(250); // special preset for inverted switch behavior
 
 // Security CONFIG
 WLED_GLOBAL bool otaLock     _INIT(false);  // prevents OTA firmware updates without password. ALWAYS enable if system exposed to any public networks
